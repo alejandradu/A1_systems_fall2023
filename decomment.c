@@ -105,19 +105,13 @@ enum CharState handleLiteral2(int c)     /*all cases write*/
     return state;
 }
 
-enum CharState handleBackslash1(int c)    /*always writes*/
+enum CharState handleBackslash(enum CharState state, int c)    /*always writes*/
 {
     printf("%c", c);
-    return LITERAL1;
+    return state;
 }
 
-enum CharState handleBackslash2(int c)    /*always writes*/
-{
-    printf("%c", c);
-    return LITERAL2;
-}
-
-int findNewline(enum CharState state, int c)
+int findNewline(int c)
 {
     if (c == '\n') {
         return 1;
@@ -137,7 +131,7 @@ int main(void)    /*don't have to declare a return type for main*/
 
     /* Read char-by-char until the file ends */
     while ((c = getchar()) != EOF) {
-        curr += findNewline(state, c);
+        curr += findNewline(c);
         switch (state) {  
             case CODE:                      
                state = handleCode(c);
@@ -161,10 +155,10 @@ int main(void)    /*don't have to declare a return type for main*/
                state = handleLiteral2(c);
                break;
             case BACKSLASH1:                    
-               state = handleBackslash1(c);
+               state = handleBackslash(state, c);
                break; 
             case BACKSLASH2:                    
-               state = handleBackslash2(c);
+               state = handleBackslash(state, c);
                break;
         }
     }
