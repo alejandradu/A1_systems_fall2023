@@ -133,7 +133,6 @@ int main(void)    /*don't have to declare a return type for main*/
     int c;                                        /*declare. C requires variable declarations*/ 
     int curr;
     int last_comment_start = 1;
-    int temp;
     enum CharState state = CODE;                  /*want it to start at CODE*/
 
     /* Read char-by-char until the file ends */
