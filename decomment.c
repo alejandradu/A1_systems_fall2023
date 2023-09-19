@@ -107,16 +107,12 @@ enum CharState handleLiteral2(int c)     /*all cases write*/
 
 enum CharState handleBackslash1(int c)    /*always writes*/
 {
-    /*enum CharState state;
-    state = LITERAL;*/
     printf("%c", c);
     return LITERAL1;
 }
 
 enum CharState handleBackslash2(int c)    /*always writes*/
 {
-    /*enum CharState state;
-    state = LITERAL;*/
     printf("%c", c);
     return LITERAL2;
 }
