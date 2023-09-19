@@ -2,7 +2,7 @@
 #include <ctype.h>
 
 /* Declare global data types (not variables) */
-enum CharState {CODE, COMMENT, SLASH, ASTERISK, LITERAL, BACKSLASH};
+enum CharState {CODE, COMMENT, SLASH, ASTERISK, LITERAL1, LITERAL2, BACKSLASH1, BACKSLASH2};
 enum ExitStatus {EXIT_SUCCESS, EXIT_FAILURE};
 
 
@@ -11,8 +11,11 @@ enum CharState handleCode(int c)       /* all cases here write to stdout*/
     enum CharState state;         /*LOCAL variable of enumeration type*/ 
     if (c == '/') {      
         state = SLASH;
-    } else if (c == '\'' || c == '"') {
-        state = LITERAL;
+    } else if (c == '\'') {
+        state = LITERAL1;
+        printf("%c", c);
+    } else if (c == '"') {
+        state = LITERAL2;
         printf("%c", c);
     } else {
         state = CODE;
@@ -30,9 +33,12 @@ enum CharState handleSlash(int c)
     } else if (c == '/') {
         state = SLASH;
         printf("/"); 
-    } else if (c == '\'' || c == '"') {
-        state = LITERAL;
-        printf("/%c", c);
+    } else if (c == '\'') {
+        state = LITERAL1;
+        printf("%c", c);
+    } else if (c == '"') {
+        state = LITERAL2;
+        printf("%c", c);
     } else {
         state = CODE;
         printf("/%c", c);
@@ -71,26 +77,48 @@ enum CharState handleComment(int c)      /*nothing writes to stdout, only stderr
     return state;
 }
 
-enum CharState handleLiteral(int c)     /*all cases write*/
+enum CharState handleLiteral1(int c)     /*all cases write*/
 {
     enum CharState state;
-    if (c == '\'' || c == '"') {
+    if (c == '\'') {
         state = CODE;
     } else if (c == '\\') {
-        state = BACKSLASH;
+        state = BACKSLASH1;
     } else {
-        state = LITERAL;
+        state = LITERAL1;
     }
     printf("%c", c);
     return state;
 }
 
-enum CharState handleBackslash(int c)    /*always writes*/
+enum CharState handleLiteral2(int c)     /*all cases write*/
 {
     enum CharState state;
-    state = LITERAL;
+    if (c == '"') {
+        state = CODE;
+    } else if (c == '\\') {
+        state = BACKSLASH2;
+    } else {
+        state = LITERAL2;
+    }
     printf("%c", c);
     return state;
+}
+
+enum CharState handleBackslash1(int c)    /*always writes*/
+{
+    /*enum CharState state;
+    state = LITERAL;*/
+    printf("%c", c);
+    return LITERAL1;
+}
+
+enum CharState handleBackslash2(int c)    /*always writes*/
+{
+    /*enum CharState state;
+    state = LITERAL;*/
+    printf("%c", c);
+    return LITERAL2;
 }
 
 int findNewline(int c)
@@ -127,12 +155,18 @@ int main(void)    /*don't have to declare a return type for main*/
             case ASTERISK:
                state = handleAsterisk(c);
                break;
-            case LITERAL:
-               state = handleLiteral(c);
+            case LITERAL1:
+               state = handleLiteral1(c);
                break;
-            case BACKSLASH:                      /*contained in a literal, so can't be a \n character*/
-               state = handleBackslash(c);
+            case LITERAL2:
+               state = handleLiteral2(c);
+               break;
+            case BACKSLASH1:                      /*contained in a literal, so can't be a \n character*/
+               state = handleBackslash1(c);
                break; 
+            case BACKSLASH2:                      /*contained in a literal, so can't be a \n character*/
+               state = handleBackslash2(c);
+               break;
         }
     }
 
