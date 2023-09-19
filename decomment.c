@@ -48,6 +48,7 @@ enum CharState handleAsterisk(int c)
         state = ASTERISK;
     } else if (c == '\n') {
         printf("\n");
+        state = ASTERISK;
     } else if (c == '/') {
         state = CODE;
     } else {
