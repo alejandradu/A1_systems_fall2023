@@ -164,11 +164,11 @@ int main(void)    /*don't have to declare a return type for main*/
                break;
             case BACKSLASH1:      
                comm_state = YES;              
-               state = handleBackslash(state, c);
+               state = handleBackslash(LITERAL1, c);
                break; 
             case BACKSLASH2:      
                comm_state = YES;              
-               state = handleBackslash(state, c);
+               state = handleBackslash(LITERAL2, c);
                break;
         }
     }
