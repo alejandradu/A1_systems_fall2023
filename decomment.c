@@ -27,6 +27,9 @@ enum CharState handleSlash(int c)
     if (c == '*') {
         printf(" ");
         state = ASTERISK;  
+    } else if (c == '/') {
+        state = SLASH;
+        printf("/");
     } else {
         state = CODE;
         printf("/%c", c);
