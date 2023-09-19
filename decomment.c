@@ -25,7 +25,7 @@ enum CharState handleSlash(int c)
     enum CharState state;
     if (c == '*') {
         state = ASTERISK;
-        printf("\b");    
+        printf("\b ");    
     } else {
         state = CODE;
         printf("%c", c);
@@ -41,7 +41,6 @@ enum CharState handleAsterisk(int c)
         state = ASTERISK;
     } else if (c == '/') {
         state = CODE;
-        printf(" ");                        /*space to replace finished comment*/
     } else {
         state = COMMENT;
     }
@@ -53,6 +52,9 @@ enum CharState handleComment(int c)      /*nothing writes to stdout, only stderr
     enum CharState state;
     if (c == '*') {
         state = ASTERISK;
+    } else if (c == '\n') {
+        printf("%c", c);
+        state = COMMENT;
     } else {
         state = COMMENT;
     }
@@ -81,6 +83,16 @@ enum CharState handleBackslash(int c)    /*always writes*/
     return state;
 }
 
+int findNewline(int c)
+{
+    if (c == '\n') {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
 int main(void)    /*don't have to declare a return type for main*/
 {
     /* Initialize local variables of the global enumeration types */
@@ -91,13 +103,12 @@ int main(void)    /*don't have to declare a return type for main*/
     /* Read char-by-char until the file ends */
     while ((c = getchar()) != EOF) {
         switch (state) {  
-            case CODE:                        /*there are only "real/countable" \n in the code*/
-               if (c == '\n') {
-                  line += 1;
-               }
+            case CODE:                        /*there are only "real/countable" \n in the code and comment states*/
+               line += findNewline(c);
                state = handleCode(c);
                break;
             case COMMENT:
+               line += findNewline(c);
                state = handleComment(c);
                break;
             case SLASH:
