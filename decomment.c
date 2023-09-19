@@ -136,8 +136,9 @@ int main(void)    /*don't have to declare a return type for main*/
         curr += findNewline(c);
         switch (state) {  
             case CODE:       
-               comm_state = YES;    /* REVERT in case of new comment - only can be turned ON from the outside */               
+               /* REVERT in case of new comment - only can be turned ON from the outside */               
                state = handleCode(c);
+               comm_state = YES;
                break;
             case COMMENT:
                if (comm_state == YES) {
@@ -147,28 +148,28 @@ int main(void)    /*don't have to declare a return type for main*/
                comm_state = NO;
                break;
             case SLASH:
-               comm_state = YES;
                state = handleSlash(c);
+               comm_state = YES;
                break;
             case ASTERISK:
-               comm_state = YES;
                state = handleAsterisk(c);
+               comm_state = YES;
                break;
             case LITERAL1:
-               comm_state = YES;
                state = handleLiteral1(c);
+               comm_state = YES;
                break;
             case LITERAL2:
-               comm_state = YES;
                state = handleLiteral2(c);
+               comm_state = YES;
                break;
-            case BACKSLASH1:      
-               comm_state = YES;              
+            case BACKSLASH1:                    
                state = handleBackslash(LITERAL1, c);
+               comm_state = YES;
                break; 
-            case BACKSLASH2:      
-               comm_state = YES;              
+            case BACKSLASH2:                    
                state = handleBackslash(LITERAL2, c);
+               comm_state = YES;
                break;
         }
     }
