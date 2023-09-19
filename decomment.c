@@ -46,8 +46,9 @@ enum CharState handleAsterisk(int c)
     enum CharState state;
     if (c == '*') {
         state = ASTERISK;
+    } else if (c == '\n') {
+        printf("\n");
     } else if (c == '/') {
-        /* printf(" "); */
         state = CODE;
     } else {
         state = COMMENT;
@@ -138,8 +139,10 @@ int main(void)    /*don't have to declare a return type for main*/
     if (state == ASTERISK || state == COMMENT) {
         fprintf(stderr, "Error: line %d: unterminated comment\n", line);
         return EXIT_FAILURE;
-    }
-    else {
+    } else {
+        if (state == SLASH) {     /* make up the lagging slash print */
+            printf("/");
+        }
         return EXIT_SUCCESS;
     }
 
