@@ -13,10 +13,11 @@ enum CharState handleCode(int c)       /* all cases here write to stdout*/
         state = SLASH;
     } else if (c == '\'' || c == '"') {
         state = LITERAL;
+        printf("%c", c);
     } else {
         state = CODE;
+        printf("%c", c);
     }
-    printf("%c", c);
     return state;
 }
 
@@ -24,11 +25,10 @@ enum CharState handleSlash(int c)
 {
     enum CharState state;
     if (c == '*') {
-        state = ASTERISK;
-        printf("\b ");    
+        state = ASTERISK;  
     } else {
         state = CODE;
-        printf("%c", c);
+        printf("/%c", c);
     }
     return state;
 
@@ -40,6 +40,7 @@ enum CharState handleAsterisk(int c)
     if (c == '*') {
         state = ASTERISK;
     } else if (c == '/') {
+        printf(" ");
         state = CODE;
     } else {
         state = COMMENT;
@@ -53,7 +54,7 @@ enum CharState handleComment(int c)      /*nothing writes to stdout, only stderr
     if (c == '*') {
         state = ASTERISK;
     } else if (c == '\n') {
-        printf("%c", c);
+        printf("\n");
         state = COMMENT;
     } else {
         state = COMMENT;
