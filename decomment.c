@@ -117,11 +117,11 @@ enum CharState handleBackslash2(int c)    /*always writes*/
     return LITERAL2;
 }
 
-int findNewline(int c)
+int findNewline(enum CharState state, int c)
 {
     if (c == '\n') {
         return 1;
-    }
+        }
     else {
         return 0;
     }
@@ -131,18 +131,22 @@ int main(void)    /*don't have to declare a return type for main*/
 {
     /* Initialize local variables of the global enumeration types */
     int c;                                        /*declare. C requires variable declarations*/ 
-    int line = 1;
+    int curr;
+    int last_comment_start = 1;
+    int temp;
     enum CharState state = CODE;                  /*want it to start at CODE*/
 
     /* Read char-by-char until the file ends */
     while ((c = getchar()) != EOF) {
+        curr += findNewline(state, c);
         switch (state) {  
-            case CODE:                        /*there are only "real/countable" \n in the code and comment states*/
-               line += findNewline(c);
+            case CODE:                      
                state = handleCode(c);
                break;
             case COMMENT:
-               line += findNewline(c);
+               if (curr - last_comment_start != 1) {
+                  last_comment_start = curr;
+               }
                state = handleComment(c);
                break;
             case SLASH:
@@ -157,10 +161,10 @@ int main(void)    /*don't have to declare a return type for main*/
             case LITERAL2:
                state = handleLiteral2(c);
                break;
-            case BACKSLASH1:                      /*contained in a literal, so can't be a \n character*/
+            case BACKSLASH1:                    
                state = handleBackslash1(c);
                break; 
-            case BACKSLASH2:                      /*contained in a literal, so can't be a \n character*/
+            case BACKSLASH2:                    
                state = handleBackslash2(c);
                break;
         }
@@ -168,7 +172,7 @@ int main(void)    /*don't have to declare a return type for main*/
 
     /*Raise error for unfinished comment. Return ExitStatus.*/
     if (state == ASTERISK || state == COMMENT) {
-        fprintf(stderr, "Error: line %d: unterminated comment\n", line);
+        fprintf(stderr, "Error: line %d: unterminated comment\n", last_comment_start);
         return EXIT_FAILURE;
     } else {
         if (state == SLASH) {     /* make up the lagging slash print */
