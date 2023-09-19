@@ -4,7 +4,7 @@
 /* Declare global data types (not variables) */
 enum CharState {CODE, COMMENT, SLASH, ASTERISK, LITERAL1, LITERAL2, BACKSLASH1, BACKSLASH2};
 enum ExitStatus {EXIT_SUCCESS, EXIT_FAILURE};
-enum CommentState {YES, NO};
+enum NewComment {ACCEPT, REJECT};
 
 
 enum CharState handleCode(int c)       /* all cases here write to stdout*/
@@ -127,49 +127,42 @@ int main(void)    /*don't have to declare a return type for main*/
     /* Initialize local variables of the global enumeration types */
     int c;                                        /*declare. C requires variable declarations*/ 
     int curr = 1;
-    int last_comment_start = 0;
+    int last_comment_start;
     enum CharState state = CODE;                  /*want it to start at CODE*/
-    enum CommentState comm_state = YES;    /* starts accepting start of new comment */
+    enum NewComment new = ACCEPT;
 
     /* Read char-by-char until the file ends */
     while ((c = getchar()) != EOF) {
         curr += findNewline(c);
         switch (state) {  
             case CODE:       
-               /* REVERT in case of new comment - only can be turned ON from the outside */               
+               new = ACCEPT;            /* can only come back to accept new comment when def back in code */
                state = handleCode(c);
-               comm_state = YES;
                break;
             case COMMENT:
-               if (comm_state == YES) {
-                   last_comment_start = curr;
+               if (new == ACCEPT) {
+                  last_comment_start = curr;
                }
+               new = REJECT;
                state = handleComment(c);
-               comm_state = NO;
                break;
             case SLASH:
                state = handleSlash(c);
-               comm_state = YES;
                break;
             case ASTERISK:
                state = handleAsterisk(c);
-               comm_state = YES;
                break;
             case LITERAL1:
                state = handleLiteral1(c);
-               comm_state = YES;
                break;
             case LITERAL2:
                state = handleLiteral2(c);
-               comm_state = YES;
                break;
-            case BACKSLASH1:                    
+            case BACKSLASH1:                   
                state = handleBackslash(LITERAL1, c);
-               comm_state = YES;
                break; 
-            case BACKSLASH2:                    
+            case BACKSLASH2:                
                state = handleBackslash(LITERAL2, c);
-               comm_state = YES;
                break;
         }
     }
