@@ -25,6 +25,7 @@ enum CharState handleSlash(int c)
 {
     enum CharState state;
     if (c == '*') {
+        printf(" ");
         state = ASTERISK;  
     } else {
         state = CODE;
@@ -40,7 +41,7 @@ enum CharState handleAsterisk(int c)
     if (c == '*') {
         state = ASTERISK;
     } else if (c == '/') {
-        printf(" ");
+        /* printf(" "); */
         state = CODE;
     } else {
         state = COMMENT;
