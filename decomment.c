@@ -29,7 +29,10 @@ enum CharState handleSlash(int c)
         state = ASTERISK;  
     } else if (c == '/') {
         state = SLASH;
-        printf("/");
+        printf("/"); 
+    } else if (c == '\'' || c == '"') {
+        state = LITERAL;
+        printf("/%c", c);
     } else {
         state = CODE;
         printf("/%c", c);
