@@ -44,5 +44,5 @@ BACKSLASH1 (accept)
 BACKSLASH2 (accept)
    all:  LITERAL2
 
-UNTERMINATED (rejecting)
+UNTERMINATED (reject)
    

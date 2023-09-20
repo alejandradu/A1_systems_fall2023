@@ -3,7 +3,7 @@ Assignment 1 readme File
 ------------------------------------------------------------------------
 What is your name?
 
-
+Alejandra Duran-Urriago
 
 ------------------------------------------------------------------------
 What authorized sources of information did you use to complete the
@@ -12,7 +12,15 @@ in the "Policies" web page (also available on armlab in the file
 ~cos217/AuthorizedSourcesList ) to this section of the readme file,
 and edit it as appropriate.
 
+The course's lectures.
 
+The course's precepts.
+
+The course's textbooks.
+
+The man pages on the armlab cluster.
+
+Current Intro Lab TAs through visits to the Intro COS Lab
 
 ------------------------------------------------------------------------
 What unauthorized sources of information did you use to complete the
@@ -26,18 +34,41 @@ interaction, may additionally require the interaction being reported
 to the Committee on Discipline. Write "None" if you used no
 unauthorized sources of information.
 
-
+None
 
 ------------------------------------------------------------------------
 What is your assessment of the assignment? Was it helpful? Was it fun?
 
-
+It was very helpful to make me understand the differences
+between JAVA, Python (that I previously knew) and C. It was
+especially useful to understand the git workflow, and efficient
+implementation of a DFA. 
 
 ------------------------------------------------------------------------
 (optional) What information can you provide about your submission that
 will help your grader to grade it in the most favorable light? In
 particular, what bugs are in your submission?
 
+The program is built in a modular way, but the number of states of
+the DFA may seem a little bit high (or at least at first I hoped
+the DFA would result to be more concise). I want to stress that this
+was a design decision to favor tractability of the edge or
+very specific cases required by the assignment (specifically,
+handling literals and backslashes in them). I thought that trying
+to include this logic with less states would just result in
+confusing transitions.
 
+I included a 'UNTERMINATED' state uniquely to gather all
+transitions that end up in a rejecting state. I know it might
+seem to add unnecessary complexity, but it is the only way
+I figured to always separate correctly a rejecting from an
+accepting state.
+
+Minor: if the last non-EOF char transitions to
+BACKSLASH1 or BACKSLASH2, the program will instead end
+in LITERAL1 and LITERAL2 respectively. This has no
+serious effect, since all states above are accepting anyway.
+For all other cases, the program ends at the state corresponding
+to the last char. 
 
 ------------------------------------------------------------------------
