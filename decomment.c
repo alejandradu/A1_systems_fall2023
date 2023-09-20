@@ -159,19 +159,32 @@ enum CharState handleLiteral2(int c)
     return state;
 }
 
- /*  Handle transitions from the BACKSLASH state
+ /*  Handle transitions from the BACKSLASH1 state
  *   Handles backslash characters within literals:
  *   Writes to stdout the current char.
  *
  *   c: currently read char given by getchar() in main()
- *   state: prior DFA state (LITERAL1 or LITERAL2)
  *
- *   returns: next DFA state (the same prior state)
+ *   returns: next DFA state (the same prior literal)
  */
-enum CharState handleBackslash(enum CharState state, int c)    /*always writes*/
+enum CharState handleBackslash1(int c)    /*always writes*/
 {
     printf("%c", c);
-    return state;
+    return LITERAL1;
+}
+
+ /*  Handle transitions from the BACKSLASH2 state
+ *   Handles backslash characters within literals:
+ *   Writes to stdout the current char.
+ *
+ *   c: currently read char given by getchar() in main()
+ *
+ *   returns: next DFA state (the same prior literal)
+ */
+enum CharState handleBackslash2(int c)    /*always writes*/
+{
+    printf("%c", c);
+    return LITERAL2;
 }
 
  /*  Determine if the current char is a newline character
@@ -234,10 +247,10 @@ int main(void)
                 state = handleLiteral2(c);
                 break;
             case BACKSLASH1:                   
-                state = handleBackslash(LITERAL1, c);
+                state = handleBackslash1(c);
                 break; 
             case BACKSLASH2:                
-                state = handleBackslash(LITERAL2, c);
+                state = handleBackslash2(c);
                 break;
         }
     }
@@ -247,7 +260,7 @@ int main(void)
         fprintf(stderr, "Error: line %d: unterminated comment\n", last_comment_start);
         return EXIT_FAILURE;
     } else {
-        if (state == SLASH) {     /* make up the lagging slash print */
+        if (state == SLASH) {     /* make up for the lagging slash print */
             printf("/");
         }
         return EXIT_SUCCESS;
