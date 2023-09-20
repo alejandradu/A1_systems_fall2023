@@ -1,0 +1,42 @@
+Textual representation of the DFA for A1
+By: Alejandra Duran-Urriago
+------------------------------------------------------------------------
+   
+CODE () <-- the start state
+   ':  LITERAL1
+   ":  LITERAL2
+   /:  SLASH
+   other:  CODE
+
+SLASH ()
+   ':  LITERAL1
+   ":  LITERAL2
+   /:  SLASH
+   *:  ASTERISK
+   other:  CODE
+   
+ASTERISK ()
+   /:  CODE
+   *:  ASTERISK
+   other:  COMMENT
+   
+COMMENT ()
+   *:  ASTERISK
+   other:  COMMENT
+   
+LITERAL1 ()
+   \:  BACKSLASH1
+   ':  CODE
+   other:  LITERAL1
+
+LITERAL2 ()
+   \:  BACKSLASH2
+   ":  CODE
+   other:  LITERAL2
+   
+BACKSLASH1 ()
+   all:  LITERAL1
+
+BACKSLASH2 ()
+   all:  LITERAL2
+   
