@@ -1,42 +1,47 @@
 Textual representation of the DFA for A1
+Accept if the sequence contains no unterminated comments
 By: Alejandra Duran-Urriago
 ------------------------------------------------------------------------
    
-CODE () <-- the start state
+CODE (accept) <-- the start state
    ':  LITERAL1
    ":  LITERAL2
    /:  SLASH
    other:  CODE
 
-SLASH ()
+SLASH (accept)
    ':  LITERAL1
    ":  LITERAL2
    /:  SLASH
    *:  ASTERISK
    other:  CODE
    
-ASTERISK ()
+ASTERISK (accept)
    /:  CODE
    *:  ASTERISK
+   EOF:  UNTERMINATED
    other:  COMMENT
    
-COMMENT ()
+COMMENT (accept)
    *:  ASTERISK
+   EOF:  UNTERMINATED
    other:  COMMENT
    
-LITERAL1 ()
+LITERAL1 (accept)
    \:  BACKSLASH1
    ':  CODE
    other:  LITERAL1
 
-LITERAL2 ()
+LITERAL2 (accept)
    \:  BACKSLASH2
    ":  CODE
    other:  LITERAL2
    
-BACKSLASH1 ()
+BACKSLASH1 (accept)
    all:  LITERAL1
 
-BACKSLASH2 ()
+BACKSLASH2 (accept)
    all:  LITERAL2
+
+UNTERMINATED (rejecting)
    

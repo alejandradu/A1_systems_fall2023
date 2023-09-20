@@ -4,7 +4,7 @@
 /* Declare global data types (not variables) */
 
 /* DFA states */
-enum CharState {CODE, COMMENT, SLASH, ASTERISK, LITERAL1, LITERAL2, BACKSLASH1, BACKSLASH2};
+enum CharState {CODE, COMMENT, SLASH, ASTERISK, LITERAL1, LITERAL2, BACKSLASH1, BACKSLASH2, UNTERMINATED};
 /* Exit status */
 enum ExitStatus {EXIT_SUCCESS, EXIT_FAILURE};
 /* States to define when a line number is recorded as a comment start */
@@ -88,6 +88,8 @@ enum CharState handleAsterisk(int c)
         state = COMMENT;
     } else if (c == '/') {
         state = CODE;
+    } else if (c == EOF) {
+        state = UNTERMINATED;
     } else {
         state = COMMENT;
     }
@@ -109,6 +111,8 @@ enum CharState handleComment(int c)
     } else if (c == '\n') {
         printf("\n");
         state = COMMENT;
+    } else if (c == EOF) {
+        state = UNTERMINATED;
     } else {
         state = COMMENT;
     }
@@ -218,8 +222,8 @@ int main(void)
     /* Initialize variable to accept a new comment line number */
     enum NewComment new = ACCEPT;
 
-    /* Read char-by-char until the file ends */
-    while ((c = getchar()) != EOF) {
+    /* Read char-by-char */
+    while (c = getchar()) {
         /* Add to the newline counter */
         curr += findNewline(c);
         switch (state) {  
@@ -252,18 +256,24 @@ int main(void)
             case BACKSLASH2:                
                 state = handleBackslash2(c);
                 break;
+            case UNTERMINATED:
+                fprintf(stderr, "Error: line %d: unterminated comment\n", last_comment_start);
+                break;
+        }
+        if (c == EOF) {
+            if (state == SLASH) {     /* make up for the lagging slash print */
+            printf("/");
+            }
+
+            break;                    /* break the while loop, EOF char inclusive */
         }
     }
 
-    /* Raise error for unfinished comment. Return ExitStatus. */
-    if (state == ASTERISK || state == COMMENT) {
-        fprintf(stderr, "Error: line %d: unterminated comment\n", last_comment_start);
+    /* Return ExitStatus */
+    if (state == UNTERMINATED) {     /* Rejecting state */
         return EXIT_FAILURE;
     } else {
-        if (state == SLASH) {     /* make up for the lagging slash print */
-            printf("/");
-        }
-        return EXIT_SUCCESS;
+        return EXIT_SUCCESS;         /* Accepting states */
     }
 
 }
