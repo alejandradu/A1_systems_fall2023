@@ -268,6 +268,8 @@ int main(void)
             case BACKSLASH2:                
                 state = handleBackslash2(c);
                 break;
+            case UNTERMINATED:        /* added for correctness, no effect */
+                break;
         }
 
         if (c == EOF) {
