@@ -58,9 +58,9 @@ enum CharState handleSlash(int c)
         state = ASTERISK;  
     } else if (c == '/') {
         state = SLASH;
-        if (c != EOF) { 
-            printf("/");
-        }
+        printf("/");
+    } else if (c == EOF) {
+        state = SLASH;
     } else if (c == '\'') {
         state = LITERAL1;
         printf("/%c", c);
@@ -268,21 +268,20 @@ int main(void)
             case BACKSLASH2:                
                 state = handleBackslash2(c);
                 break;
-            case UNTERMINATED:
-                fprintf(stderr, "Error: line %d: unterminated comment\n", last_comment_start);
-                break;
         }
+
         if (c == EOF) {
             if (state == SLASH) {     /* make up for the lagging slash print */
             printf("/");
             }
 
-            break;                    /* break the while loop, EOF char inclusive */
+            break;                    /* break the while loop regardless of state */
         }
     }
 
     /* Return ExitStatus */
     if (state == UNTERMINATED) {     /* Rejecting state */
+        fprintf(stderr, "Error: line %d: unterminated comment\n", last_comment_start);
         return EXIT_FAILURE;
     } else {
         return EXIT_SUCCESS;         /* Accepting states */
