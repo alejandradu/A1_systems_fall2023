@@ -223,7 +223,7 @@ int main(void)
     enum NewComment new = ACCEPT;
 
     /* Read char-by-char */
-    while (c = getchar()) {
+    while ((c = getchar())) {
         /* Add to the newline counter */
         curr += findNewline(c);
         switch (state) {  
