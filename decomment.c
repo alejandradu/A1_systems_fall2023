@@ -25,7 +25,7 @@ enum CharState handleCode(int c)
     /* Local variable to allocate the next DFA state */
     enum CharState state; 
     if (c == '/') {      
-        state = SLASH;        /* don't write: '/' might be a comment */
+        state = SLASH;          /* don't write: '/' might be a comment */
     } else if (c == '\'') {
         state = LITERAL1;
         printf("%c", c);
@@ -34,7 +34,9 @@ enum CharState handleCode(int c)
         printf("%c", c);
     } else {
         state = CODE;
-        printf("%c", c);
+        if (c != EOF) {         /* exception: don't write EOF */
+            printf("%c", c);
+        }
     }
     return state;
 }
@@ -56,7 +58,9 @@ enum CharState handleSlash(int c)
         state = ASTERISK;  
     } else if (c == '/') {
         state = SLASH;
-        printf("/"); 
+        if (c != EOF) { 
+            printf("/");
+        }
     } else if (c == '\'') {
         state = LITERAL1;
         printf("/%c", c);
@@ -137,7 +141,9 @@ enum CharState handleLiteral1(int c)
     } else {
         state = LITERAL1;
     }
-    printf("%c", c);
+    if (c != EOF) { 
+            printf("%c", c);
+        }
     return state;
 }
 
@@ -159,7 +165,9 @@ enum CharState handleLiteral2(int c)
     } else {
         state = LITERAL2;
     }
-    printf("%c", c);
+    if (c != EOF) { 
+            printf("%c", c);
+        }
     return state;
 }
 
@@ -173,7 +181,9 @@ enum CharState handleLiteral2(int c)
  */
 enum CharState handleBackslash1(int c)    /*always writes*/
 {
-    printf("%c", c);
+    if (c != EOF) { 
+            printf("%c", c);
+        }
     return LITERAL1;
 }
 
@@ -187,7 +197,9 @@ enum CharState handleBackslash1(int c)    /*always writes*/
  */
 enum CharState handleBackslash2(int c)    /*always writes*/
 {
-    printf("%c", c);
+    if (c != EOF) { 
+            printf("%c", c);
+        }
     return LITERAL2;
 }
 
