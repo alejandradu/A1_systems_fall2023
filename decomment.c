@@ -12,7 +12,7 @@ enum NewComment {ACCEPT, REJECT};
 
 
  /*  Handle transitions from the CODE state
- *   Write the current char to stdout iff not part of a comment.
+ *   Write the current char to stdout if not part of a comment.
  *   If input is an incomplete comment, results in an unwritten
  *   slash, added later in main()
  *
@@ -125,7 +125,7 @@ enum CharState handleComment(int c)
 
  /*  Handle transitions from the LITERAL1 state
  *   Handles literals in single quotations.
- *   Write the current char to stdout in all cases.
+ *   Write the current char to stdout (not EOF)
  *
  *   c: currently read char given by getchar() in main()
  *
@@ -149,7 +149,7 @@ enum CharState handleLiteral1(int c)
 
  /*  Handle transitions from the LITERAL2 state
  *   Handles literals in double quotations.
- *   Write the current char to stdout in all cases.
+ *   Write the current char to stdout (not EOF)
  *
  *   c: currently read char given by getchar() in main()
  *
@@ -173,7 +173,7 @@ enum CharState handleLiteral2(int c)
 
  /*  Handle transitions from the BACKSLASH1 state
  *   Handles backslash characters within literals:
- *   Writes to stdout the current char.
+ *   Writes to stdout the current char (not EOF)
  *
  *   c: currently read char given by getchar() in main()
  *
@@ -189,7 +189,7 @@ enum CharState handleBackslash1(int c)    /*always writes*/
 
  /*  Handle transitions from the BACKSLASH2 state
  *   Handles backslash characters within literals:
- *   Writes to stdout the current char.
+ *   Writes to stdout the current char (not EOF)
  *
  *   c: currently read char given by getchar() in main()
  *
